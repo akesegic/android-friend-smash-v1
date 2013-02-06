@@ -17,7 +17,6 @@ The accompanying tutorial for this sample app can be found here: https://develop
 ## Additional Resources
 
 Facebook SDK for Android documentation can be found at https://developers.facebook.com/android/
-Games Tutorial: https://developers.facebook.com/docs/guides/games/
 
 ## Contributing
 
