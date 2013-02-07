@@ -722,6 +722,7 @@ public class HomeFragment extends Fragment {
 							FacebookRequestError error = response.getError();
 							if (error != null) {
 								Log.e(FriendSmashApplication.TAG, "Posting Score to Facebook failed: " + error.getErrorMessage());
+								((HomeActivity)getActivity()).handleError(error, false);
 							} else {
 								Log.i(FriendSmashApplication.TAG, "Score posted successfully to Facebook");
 							}
