@@ -37,9 +37,6 @@ public class FriendSmashApplication extends Application {
 	
 	// Switch between the non-social and social Facebook versions of the game
 	static final boolean IS_SOCIAL = false;
-	
-	// Facebook App ID for FriendSmash
-	static final String APP_ID = "480369938658210";
 
 	
 	/* Friend Smash application attributes */

@@ -56,7 +56,7 @@ public abstract class SingleFragmentActivity extends FragmentActivity {
 		
 		// Measure mobile app install ads
  		// Ref: https://developers.facebook.com/docs/tutorials/mobile-app-ads/
- 		com.facebook.Settings.publishInstallAsync(this, ((FriendSmashApplication)getApplication()).APP_ID);
+ 		com.facebook.Settings.publishInstallAsync(this, ((FriendSmashApplication)getApplication()).getString(R.string.app_id));
 	}
 
 }
