@@ -242,8 +242,7 @@ public class GameFragment extends Fragment {
         	if (friendToSmashFirstName == null) {
         		// A name hasn't been set yet (i.e. it hasn't been fetched through a passed in id, so
         		// a random friend needs to be used instead, so fetch this name
-        		String friendToSmashName = ((FriendSmashApplication) getActivity().getApplication()).getFriend(friendToSmashIndex).getName();
-            	friendToSmashFirstName = friendToSmashName.split(" ")[0];
+        		friendToSmashFirstName = ((FriendSmashApplication) getActivity().getApplication()).getFriend(friendToSmashIndex).getFirstName();
         	}
         	smashPlayerNameTextView.setText("Smash " + friendToSmashFirstName + " !");
 		} else {

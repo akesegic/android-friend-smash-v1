@@ -158,8 +158,7 @@ public class HomeFragment extends Fragment {
 			personalizeHomeFragment();
 			
 			scoresButton = (ImageView)v.findViewById(R.id.scoresButton);
-			scoresButton.setOnTouchListener(new View.OnTouchListener()
-	    	{
+			scoresButton.setOnTouchListener(new View.OnTouchListener() {
 	            @Override
 				public boolean onTouch(View v, MotionEvent event) {
 	            	onScoresButtonTouched();
@@ -168,8 +167,7 @@ public class HomeFragment extends Fragment {
 	        });
 			
 			challengeButton = (ImageView)v.findViewById(R.id.challengeButton);
-			challengeButton.setOnTouchListener(new View.OnTouchListener()
-	    	{
+			challengeButton.setOnTouchListener(new View.OnTouchListener() {
 	            @Override
 				public boolean onTouch(View v, MotionEvent event) {
 	            	onChallengeButtonTouched();
@@ -178,8 +176,7 @@ public class HomeFragment extends Fragment {
 	        });
 			
 			bragButton = (ImageView)v.findViewById(R.id.bragButton);
-			bragButton.setOnTouchListener(new View.OnTouchListener()
-	    	{
+			bragButton.setOnTouchListener(new View.OnTouchListener() {
 	            @Override
 				public boolean onTouch(View v, MotionEvent event) {
 	            	onBragButtonTouched();
@@ -198,8 +195,7 @@ public class HomeFragment extends Fragment {
 		updateYouScoredTextView();
 		
 		playButton = (ImageView)v.findViewById(R.id.playButton);
-		playButton.setOnTouchListener(new View.OnTouchListener()
-    	{
+		playButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
 			public boolean onTouch(View v, MotionEvent event) {
             	onPlayButtonTouched();
@@ -208,10 +204,8 @@ public class HomeFragment extends Fragment {
         });
 		
 		// Instantiate the gameOverTask
-		gameOverTask = new Runnable()
-		{
-			public void run()
-			{
+		gameOverTask = new Runnable() {
+			public void run() {
 				// Hide the gameOverContainer
 				gameOverContainer.setVisibility(View.INVISIBLE);
 				
@@ -302,6 +296,25 @@ public class HomeFragment extends Fragment {
 					i.putExtras(bundle);
 					gameLaunchedFromDeepLinking = true;
 					startActivityForResult(i, 0);
+					
+					// Delete the Request now it has been consumed and processed
+					Request deleteFBRequestRequest = new Request(Session.getActiveSession(),
+							graphRequestIDForSendingUser + "_" + application.getCurrentFBUser().getId(),
+							new Bundle(),
+		                    HttpMethod.DELETE,
+		                    new Request.Callback() {
+
+								@Override
+								public void onCompleted(Response response) {
+									FacebookRequestError error = response.getError();
+									if (error != null) {
+										Log.e(FriendSmashApplication.TAG, "Deleting consumed Request failed: " + error.getErrorMessage());
+									} else {
+										Log.i(FriendSmashApplication.TAG, "Consumed Request deleted");
+									}
+								}
+							});
+					Request.executeBatchAsync(deleteFBRequestRequest);
 				} else if (path.contains("challenge_brag_")) {
 					// Deep linked through a feed post, so extract the sending user's user id from the last part
 					// of the path and start the game smashing this user

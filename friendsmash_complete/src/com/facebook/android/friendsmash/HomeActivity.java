@@ -311,6 +311,9 @@ public class HomeActivity extends FragmentActivity {
 					}
 				}
 			});
+			Bundle params = new Bundle();
+			params.putString("fields", "name,first_name,last_name");
+			friendsRequest.setParameters(params);
 			
 			// Get current logged in user information
 			Request meRequest = Request.newMeRequest(session, new Request.GraphUserCallback() {

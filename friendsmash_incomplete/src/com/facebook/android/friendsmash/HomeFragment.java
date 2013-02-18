@@ -143,8 +143,7 @@ public class HomeFragment extends Fragment {
 			v = inflater.inflate(R.layout.fragment_home_fb_logged_in, parent, false);
 			
 			scoresButton = (ImageView)v.findViewById(R.id.scoresButton);
-			scoresButton.setOnTouchListener(new View.OnTouchListener()
-	    	{
+			scoresButton.setOnTouchListener(new View.OnTouchListener() {
 	            @Override
 				public boolean onTouch(View v, MotionEvent event) {
 	            	onScoresButtonTouched();
@@ -153,8 +152,7 @@ public class HomeFragment extends Fragment {
 	        });
 			
 			challengeButton = (ImageView)v.findViewById(R.id.challengeButton);
-			challengeButton.setOnTouchListener(new View.OnTouchListener()
-	    	{
+			challengeButton.setOnTouchListener(new View.OnTouchListener() {
 	            @Override
 				public boolean onTouch(View v, MotionEvent event) {
 	            	onChallengeButtonTouched();
@@ -163,8 +161,7 @@ public class HomeFragment extends Fragment {
 	        });
 			
 			bragButton = (ImageView)v.findViewById(R.id.bragButton);
-			bragButton.setOnTouchListener(new View.OnTouchListener()
-	    	{
+			bragButton.setOnTouchListener(new View.OnTouchListener() {
 	            @Override
 				public boolean onTouch(View v, MotionEvent event) {
 	            	onBragButtonTouched();
@@ -183,8 +180,7 @@ public class HomeFragment extends Fragment {
 		updateYouScoredTextView();
 		
 		playButton = (ImageView)v.findViewById(R.id.playButton);
-		playButton.setOnTouchListener(new View.OnTouchListener()
-    	{
+		playButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
 			public boolean onTouch(View v, MotionEvent event) {
             	onPlayButtonTouched();
@@ -193,10 +189,8 @@ public class HomeFragment extends Fragment {
         });
 		
 		// Instantiate the gameOverTask
-		gameOverTask = new Runnable()
-		{
-			public void run()
-			{
+		gameOverTask = new Runnable() {
+			public void run() {
 				// Hide the gameOverContainer
 				gameOverContainer.setVisibility(View.INVISIBLE);
 				
