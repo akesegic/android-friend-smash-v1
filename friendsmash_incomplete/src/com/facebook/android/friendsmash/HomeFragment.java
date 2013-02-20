@@ -281,13 +281,23 @@ public class HomeFragment extends Fragment {
 
 	// Called when the Play button is touched
 	private void onPlayButtonTouched() {
-		if (application.IS_SOCIAL == false || application.getFriends() != null) {
-	        Intent i = new Intent(getActivity(), GameActivity.class);
-	        startActivityForResult(i, 0);
+		if (application.IS_SOCIAL == true) {
+			if (application.getFriends() == null) {
+				((HomeActivity)getActivity()).showError("Complete the Personalize Chapter of the Friend Smash Tutorial first!", false);
+			} else if (application.getFriends().size() <= 0) {
+				((HomeActivity)getActivity()).showError("You don't have any friends to smash!", false);
+			} else {
+				startGame();
+			}
 		} else {
-			((HomeActivity)getActivity()).showError("Complete the Personalize Chapter of the Friend Smash Tutorial first!", false);
+			startGame();
 		}
-    }
+	}
+
+	private void startGame() {
+	    Intent i = new Intent(getActivity(), GameActivity.class);
+	    startActivityForResult(i, 0);
+	}
 	
 	// Called when the Challenge button is touched
 	private void onChallengeButtonTouched() {
