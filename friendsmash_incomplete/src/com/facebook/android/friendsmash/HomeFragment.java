@@ -362,7 +362,7 @@ public class HomeFragment extends Fragment {
 	}
 	
 	// Update with the user's score
-	private void updateYouScoredTextView() {
+	void updateYouScoredTextView() {
 		if (youScoredTextView != null) {
 			if (application.getScore() >= 0) {
 				youScoredTextView.setText("You Scored " + application.getScore() + "!");
@@ -373,8 +373,8 @@ public class HomeFragment extends Fragment {
 		}
 	}
 	
-	// Hide/show buttons based on whether the user has played ag ame yet or not
-	private void updateButtonVisibility() {
+	// Hide/show buttons based on whether the user has played a game yet or not
+	void updateButtonVisibility() {
 		if (scoresButton != null && challengeButton != null && bragButton != null) {
 			if (application.getScore() >= 0) {
 				// The player has played at least one game, so show the buttons

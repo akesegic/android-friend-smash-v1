@@ -221,6 +221,11 @@ public class HomeActivity extends FragmentActivity {
         			((FriendSmashApplication)getApplication()).setLoggedIn(false);
         			break;
         		case HOME:
+        			// Update the youScoredTextView in HomeFragment
+        			if (fragments[HOME] != null) {
+        				((HomeFragment)fragments[HOME]).updateYouScoredTextView();
+        				((HomeFragment)fragments[HOME]).updateButtonVisibility();
+        			}
         			// Set the loggedIn attribute
         			((FriendSmashApplication)getApplication()).setLoggedIn(true);
         			break;
