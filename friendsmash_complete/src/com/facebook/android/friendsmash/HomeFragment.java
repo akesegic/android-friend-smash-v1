@@ -510,7 +510,7 @@ public class HomeFragment extends Fragment {
     	params.putString("message", "I just smashed " + application.getScore() + " friends! Can you beat it?");
     	
     	// 2. Optionally provide a 'to' param to direct the request at a specific user
-    	params.putString("to", "515768651");
+//    	params.putString("to", "515768651");
     	
     	// 3. Suggest friends the user may want to request - could be game specific
     	// e.g. players you are in a match with, or players who recently played the game etc.
