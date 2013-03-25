@@ -639,7 +639,7 @@ public class HomeFragment extends Fragment {
     	// who sent the post
     	GraphUser currentFBUser = application.getCurrentFBUser();
     	if (currentFBUser != null) {
-    		params.putString("link", "https://www.friendsmash.com/challenge_brag_" +
+    		params.putString("link", "https://apps.facebook.com/friendsmashsample/?challenge_brag=" +
     				currentFBUser.getId());
     	}
     	
