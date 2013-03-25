@@ -1,6 +1,8 @@
 # Friend Smash sample Facebook app
 
-Authors: Phil Hewinson (philhewinson)
+Authors: 
+Phil Hewinson (philhewinson)
+Ali Parr (aliparr)
 
 ## Overview
 
