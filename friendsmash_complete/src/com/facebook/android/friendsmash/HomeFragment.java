@@ -279,13 +279,12 @@ public class HomeFragment extends Fragment {
 			// from deep linking, see if it has been deep linked and launch the game appropriately
 			Uri target = getActivity().getIntent().getData();
 			if (target != null) {
-				String path = target.getPath();
-				
 				Intent i = new Intent(getActivity(), GameActivity.class);
 				
 			    // Target is the deep-link Uri, so skip loading this home screen and load the game
 				// directly with the sending user's picture to smash
 				String graphRequestIDsForSendingUser = target.getQueryParameter("request_ids");
+				String feedPostIDForSendingUser = target.getQueryParameter("challenge_brag");
 				
 				if (graphRequestIDsForSendingUser != null) {
 					// Deep linked through a Request and use the latest request (request_id) if multiple requests have been sent
@@ -315,12 +314,11 @@ public class HomeFragment extends Fragment {
 								}
 							});
 					Request.executeBatchAsync(deleteFBRequestRequest);
-				} else if (path.contains("challenge_brag_")) {
-					// Deep linked through a feed post, so extract the sending user's user id from the last part
-					// of the path and start the game smashing this user
-					String sendingUserID = path.replaceFirst("/challenge_brag_", "");
+				} else if (feedPostIDForSendingUser != null) {
+					// Deep linked through a feed post, so start the game smashing the user specified by the id attached to the
+					// challenge_brag parameter
 					Bundle bundle = new Bundle();
-					bundle.putString("user_id", sendingUserID);
+					bundle.putString("user_id", feedPostIDForSendingUser);
 					i.putExtras(bundle);
 					gameLaunchedFromDeepLinking = true;
 					startActivityForResult(i, 0);
