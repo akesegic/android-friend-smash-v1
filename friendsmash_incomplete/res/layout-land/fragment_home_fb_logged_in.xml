@@ -122,14 +122,15 @@
 		        android:layout_gravity="bottom|left"
 		        android:src="@drawable/brag_button" />
 		   	
-		   	<com.facebook.android.friendsmash.FriendSmashLogoutButton
+		   	<com.facebook.widget.LoginButton
 	            android:id="@+id/loginButton"
 	            android:layout_gravity="bottom|right"
 	            android:layout_marginBottom="4dp"
 	            custom:login_text=""
 	            custom:logout_text=""
 	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content" />
+	            android:layout_height="wrap_content"
+	            style="@style/logout_button" />
 	   	
 	   	</FrameLayout>
 	
