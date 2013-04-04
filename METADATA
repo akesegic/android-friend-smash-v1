@@ -24,6 +24,6 @@
   "tutorial": {
     "url": "https://developers.facebook.com/docs/tutorials/androidsdk/3.0/games/"
   },
-  "featured": false,
+  "featured": true,
   "deprecated": false
 }
