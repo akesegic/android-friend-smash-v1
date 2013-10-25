@@ -61,6 +61,7 @@ import com.facebook.Session;
 import com.facebook.SessionDefaultAudience;
 import com.facebook.model.GraphObject;
 import com.facebook.model.GraphUser;
+import com.facebook.widget.FacebookDialog;
 import com.facebook.widget.ProfilePictureView;
 import com.facebook.widget.WebDialog;
 
@@ -629,25 +630,48 @@ public class HomeFragment extends Fragment {
 	// Pop up a feed dialog for the user to brag to their friends about their score and to offer
 	// them the opportunity to smash them back in Friend Smash
 	private void sendBrag() {
-		// Show a feed dialog to the user to brag on their Facebook timeline and newsfeed
-		// This will be using the dialog web views as supported in the old SDK
-    	Bundle params = new Bundle();
-    	
-    	// This first parameter is used for deep linking so that anyone who clicks the link will start smashing this user
+		// This function will invoke the Feed Dialog to post to a user's Timeline and News Feed
+	    // It will attempt to use the Facebook Native Share dialog
+	    // If that's not supported we'll fall back to the web based dialog.
+		
+		GraphUser currentFBUser = application.getCurrentFBUser();
+		
+		// This first parameter is used for deep linking so that anyone who clicks the link will start smashing this user
     	// who sent the post
-    	GraphUser currentFBUser = application.getCurrentFBUser();
-    	if (currentFBUser != null) {
-    		params.putString("link", "https://apps.facebook.com/friendsmashsample/?challenge_brag=" +
-    				currentFBUser.getId());
-    	}
-    	
-    	params.putString("name", "Checkout my Friend Smash greatness!");
-    	params.putString("caption", "Come smash me back!");
-    	params.putString("description", "I just smashed " + application.getScore() + " friends! Can you beat my score?");
-    	params.putString("picture", "http://www.friendsmash.com/images/logo_large.jpg");
-    	
-    	// Show FBDialog without a notification bar
-    	showDialogWithoutNotificationBar("feed", params);
+		String link = "https://apps.facebook.com/friendsmashsample/?challenge_brag=";
+		if (currentFBUser != null) {
+			link += currentFBUser.getId();
+		}
+		
+		// Define the other parameters
+		String name = "Checkout my Friend Smash greatness!";
+		String caption = "Come smash me back!";
+		String description = "I just smashed " + application.getScore() + " friends! Can you beat my score?";
+	    String picture = "http://www.friendsmash.com/images/logo_large.jpg";
+		
+	    if (FacebookDialog.canPresentShareDialog(getActivity(), FacebookDialog.ShareDialogFeature.SHARE_DIALOG)) {
+	    	// Create the Native Share dialog
+			FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(getActivity())
+			.setLink(link)
+			.setName(name)
+			.setCaption(caption)
+			.setPicture(picture)
+			.build();
+			
+			// Show the Native Share dialog
+			((HomeActivity)getActivity()).getFbUiLifecycleHelper().trackPendingDialogCall(shareDialog.present());
+		} else {
+			// Prepare the web dialog parameters
+			Bundle params = new Bundle();
+	    	params.putString("link", link);
+	    	params.putString("name", caption);
+	    	params.putString("caption", caption);
+	    	params.putString("description", description);
+	    	params.putString("picture", picture);
+	    	
+	    	// Show FBDialog without a notification bar
+	    	showDialogWithoutNotificationBar("feed", params);
+		}
 	}
 	
 	// Show a dialog (feed or request) without a notification bar (i.e. full screen)

@@ -22,6 +22,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.WindowManager;
 
+import com.facebook.AppEventsLogger;
+
 /**
  *  Only used by Activities where a single Fragment is used and not changed (i.e. used by
  *  all Activities except HomeActivity
@@ -56,7 +58,7 @@ public abstract class SingleFragmentActivity extends FragmentActivity {
 		
 		// Measure mobile app install ads
  		// Ref: https://developers.facebook.com/docs/tutorials/mobile-app-ads/
- 		com.facebook.Settings.publishInstallAsync(this, ((FriendSmashApplication)getApplication()).getString(R.string.app_id));
+		AppEventsLogger.activateApp(this, ((FriendSmashApplication)getApplication()).getString(R.string.app_id));
 	}
 
 }

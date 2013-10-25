@@ -16,6 +16,8 @@
 
 package com.facebook.android.friendsmash;
 
+import com.facebook.AppEventsLogger;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -56,7 +58,7 @@ public abstract class SingleFragmentActivity extends FragmentActivity {
 		
 		// Measure mobile app install ads
  		// Ref: https://developers.facebook.com/docs/tutorials/mobile-app-ads/
- 		com.facebook.Settings.publishInstallAsync(this, ((FriendSmashApplication)getApplication()).getString(R.string.app_id));
+		AppEventsLogger.activateApp(this, ((FriendSmashApplication)getApplication()).getString(R.string.app_id));
 	}
 
 }

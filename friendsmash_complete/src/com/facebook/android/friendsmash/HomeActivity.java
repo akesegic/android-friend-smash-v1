@@ -37,6 +37,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.facebook.AppEventsLogger;
 import com.facebook.FacebookRequestError;
 import com.facebook.Request;
 import com.facebook.RequestBatch;
@@ -63,8 +64,8 @@ public class HomeActivity extends FragmentActivity {
 
 	// Declare the UiLifecycleHelper for Facebook session management
     private UiLifecycleHelper fbUiLifecycleHelper;
-    
-    // Fragment attributes
+
+	// Fragment attributes
     private static final int FB_LOGGED_OUT_HOME = 0;
     private static final int HOME = 1;
     private static final int FRAGMENT_COUNT = HOME +1;
@@ -78,6 +79,11 @@ public class HomeActivity extends FragmentActivity {
  	public HomeActivity() {
  		super();
  	}
+ 	
+ 	// Getter for the fbUiLifecycleHelper
+ 	public UiLifecycleHelper getFbUiLifecycleHelper() {
+		return fbUiLifecycleHelper;
+	}
  	
  	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -189,7 +195,7 @@ public class HomeActivity extends FragmentActivity {
  		
  		// Measure mobile app install ads
  		// Ref: https://developers.facebook.com/docs/tutorials/mobile-app-ads/
- 		com.facebook.Settings.publishInstallAsync(this, ((FriendSmashApplication)getApplication()).getString(R.string.app_id));
+ 		AppEventsLogger.activateApp(this, ((FriendSmashApplication)getApplication()).getString(R.string.app_id));
     }
 
     @Override
