@@ -48,6 +48,10 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphObject;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
+import com.parse.LogInCallback;
+import com.parse.ParseException;
+import com.parse.ParseFacebookUtils;
+import com.parse.ParseUser;
 
 /**
  *  Entry point for the app that represents the home screen with the Play button etc. and
@@ -298,7 +302,7 @@ public class HomeActivity extends FragmentActivity {
 	
 	// Fetch user information and login (i.e switch to the personalized HomeFragment)
 	private void fetchUserInformationAndLogin() {
-		final Session session = Session.getActiveSession();
+		final Session session = Session.getActiveSession();				
 		if (session != null && session.isOpened()) {
 			// If the session is open, make an API call to get user information required for the app
 			
@@ -338,6 +342,9 @@ public class HomeActivity extends FragmentActivity {
 					} else if (session == Session.getActiveSession()) {
 						// Set the currentFBUser attribute
 						((FriendSmashApplication)getApplication()).setCurrentFBUser(user);
+						
+						// Now log the user into Parse.
+                        logIntoParse(user, session);
 					}
 				}
 			});
@@ -363,6 +370,52 @@ public class HomeActivity extends FragmentActivity {
 		}
 	}
 	
+	private void logIntoParse(GraphUser fbUser, Session session) {
+		ParseFacebookUtils.logIn(fbUser.getId(), session.getAccessToken(), session.getExpirationDate(), new LogInCallback() {
+			@Override
+			public void done(ParseUser parseUser, ParseException err) {                   
+				if (parseUser != null) {
+					// The user is logged into Parse.
+					if (parseUser.isNew()) {
+						// This user was created during this session with Facebook Login.                       
+						Log.d(TAG, "New user created.");
+
+						// Initialize new user with some values and persist to Parse.
+						parseUser.put("bombs", FriendSmashApplication.NEW_USER_BOMBS);
+						parseUser.put("coins", FriendSmashApplication.NEW_USER_COINS);
+						parseUser.saveInBackground();
+
+						FriendSmashApplication fsApp = ((FriendSmashApplication)getApplication());                      
+						fsApp.setBombs(FriendSmashApplication.NEW_USER_BOMBS);
+						fsApp.setCoins(FriendSmashApplication.NEW_USER_COINS);
+					} else {
+						Log.d(TAG, "User has logged in before. Pull their values: " + parseUser);
+
+						// This user has logged in before. Let's pull and sync their values locally.
+						FriendSmashApplication fsApp = ((FriendSmashApplication)getApplication());                      
+						fsApp.setBombs(parseUser.getInt("bombs"));
+						fsApp.setCoins(parseUser.getInt("coins"));                      
+					}
+
+					loadInventoryFragment();
+				} else {
+					// The user wasn't logged in. Check the exception.
+					Log.d(TAG, "User was not logged into Parse: " + err.getMessage());
+				}
+			}
+		});
+	}
+
+	// Loads the inventory portion of the HomeFragment. 
+    private void loadInventoryFragment() {
+    	Log.d(TAG, "Loading inventory fragment");
+    	if (isResumed) {
+			((HomeFragment)fragments[HOME]).loadInventory();
+		} else {
+			showError(getString(R.string.error_switching_screens), true);
+		}
+    }
+
 	// Switches to the personalized HomeFragment as the user has just logged in
 	private void loadPersonalizedFragment() {
 		if (isResumed) {
@@ -474,6 +527,7 @@ public class HomeActivity extends FragmentActivity {
 	}
 	
     private void logout() {
+    	Log.d(TAG, "Logging user out.");
     	// Close the session, which will cause a callback to show the logout screen
 		Session.getActiveSession().closeAndClearTokenInformation();
 		
