@@ -97,6 +97,9 @@ public class HomeFragment extends Fragment {
     private ImageView scoresButton;
     private ImageView challengeButton;
     private ImageView bragButton;
+    
+    private TextView numBombs;
+    private TextView numCoins;
 	
 	// Parameters of a WebDialog that should be displayed
     private WebDialog dialog = null;
@@ -157,6 +160,9 @@ public class HomeFragment extends Fragment {
 			
 			// Personalize this HomeFragment
 			personalizeHomeFragment();
+			
+			numBombs = (TextView)v.findViewById(R.id.numBombs);
+			numCoins = (TextView)v.findViewById(R.id.numCoins);
 			
 			scoresButton = (ImageView)v.findViewById(R.id.scoresButton);
 			scoresButton.setOnTouchListener(new View.OnTouchListener() {
@@ -251,6 +257,12 @@ public class HomeFragment extends Fragment {
             // Set the welcomeTextView Textview's text to the user's name
             welcomeTextView.setText("Welcome, " + application.getCurrentFBUser().getFirstName());
 		}
+	}
+	
+	public void loadInventory() {
+		FriendSmashApplication app = (FriendSmashApplication)getActivity().getApplication();
+		numBombs.setText(String.valueOf(app.getBombs()));
+		numCoins.setText(String.valueOf(app.getCoins()));		
 	}
 	
 	// Restores the state during onCreateView
