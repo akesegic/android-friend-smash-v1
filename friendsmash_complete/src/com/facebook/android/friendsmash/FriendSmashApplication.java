@@ -21,9 +21,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.facebook.FacebookRequestError;
 import com.facebook.model.GraphUser;
+import com.parse.Parse;
+import com.parse.ParseFacebookUtils;
 
 /**
  *  Use a custom Application class to pass state data between Activities.
@@ -41,9 +44,12 @@ public class FriendSmashApplication extends Application {
 	
 	/* Friend Smash application attributes */
 	
-	// Player's current score
+	// Player inventory
+	public static int NEW_USER_BOMBS = 5;
+	public static int NEW_USER_COINS = 100;
 	private int score = -1;
-	
+	private int bombs = 0;
+	private int coins = 0;	
 	
 	/* Facebook application attributes */
 
@@ -80,6 +86,21 @@ public class FriendSmashApplication extends Application {
 		this.score = score;
 	}
 
+	public int getBombs() {
+		return bombs;
+	}
+
+	public void setBombs(int bombs) {
+		this.bombs = bombs;
+	}
+
+	public int getCoins() {
+		return coins;
+	}
+
+	public void setCoins(int coins) {
+		this.coins = coins;		
+	}
 	
 	/* Facebook attribute getters & setters */
 	
@@ -171,6 +192,11 @@ public class FriendSmashApplication extends Application {
 
 	public static String getFriendsKey() {
 		return FRIENDS_KEY;
+	}
+	
+	public void onCreate() {
+		Parse.initialize(this, "G47jOTBA55D8nFthkuhpjCxGOeQRZzmMPdWry309", "JQIBnTsmuyboXsXjYpjyPkFmKmPxcinlLEPDwNlC");
+		ParseFacebookUtils.initialize(getString(R.string.app_id));
 	}
 	
 }
