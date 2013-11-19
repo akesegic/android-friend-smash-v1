@@ -64,6 +64,7 @@ import com.facebook.model.GraphUser;
 import com.facebook.widget.FacebookDialog;
 import com.facebook.widget.ProfilePictureView;
 import com.facebook.widget.WebDialog;
+import com.parse.ParseUser;
 
 /**
  *  Fragment to be shown once the user is logged in on the social version of the game or
@@ -163,6 +164,25 @@ public class HomeFragment extends Fragment {
 			
 			numBombs = (TextView)v.findViewById(R.id.numBombs);
 			numCoins = (TextView)v.findViewById(R.id.numCoins);
+			
+			ImageView bombButton = (ImageView)v.findViewById(R.id.bombButton);
+			bombButton.setOnTouchListener(new View.OnTouchListener() {
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					Log.d(TAG, "buying more bombs");
+					
+					// Each bomb cost 5 coins.
+					FriendSmashApplication app = (FriendSmashApplication)getActivity().getApplication();
+					app.setBombs(app.getBombs()+1);
+					app.setCoins(app.getCoins()-5);
+					ParseUser.getCurrentUser().put("bombs", app.getBombs());
+					ParseUser.getCurrentUser().put("coins", app.getCoins());
+					ParseUser.getCurrentUser().saveInBackground();
+					
+					loadInventory();
+					return false;
+				}
+			});
 			
 			scoresButton = (ImageView)v.findViewById(R.id.scoresButton);
 			scoresButton.setOnTouchListener(new View.OnTouchListener() {
