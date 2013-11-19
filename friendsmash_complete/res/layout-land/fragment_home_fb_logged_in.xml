@@ -35,13 +35,6 @@
 		    <RelativeLayout
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content" >
-		        
-			    <ImageView
-			        android:id="@+id/imageView1"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:paddingTop="4dip"
-			        android:src="@drawable/welcome_panel_blank" />
 			    
 			    <com.facebook.widget.ProfilePictureView
 			        android:id="@+id/userImage"
@@ -64,6 +57,44 @@
 				        android:layout_height="wrap_content"
 				        style="@style/PlayerNameFont"
 				        android:text="@string/welcome_message" />
+		       	    
+		       	    <LinearLayout
+				        android:layout_width="wrap_content"
+				    	android:layout_height="wrap_content"
+				    	android:orientation="horizontal"
+				    	android:paddingTop="4dip"
+				    	>
+		       	    
+	     	    		<ImageView
+					        android:id="@+id/coinImage"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        android:src="@drawable/coin" />
+	     	    		
+	     	    		<TextView
+					        android:id="@+id/numCoins"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        style="@style/PlayerNameFont"
+					        android:paddingLeft="4dip"
+					        android:text="74" />
+	     	    		
+	     	    		<ImageView
+					        android:id="@+id/bombButton"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        android:paddingLeft="10dip"
+					        android:src="@drawable/bomb" />
+	     	    		
+	     	    		<TextView
+					        android:id="@+id/numBombs"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        style="@style/PlayerNameFont"
+					        android:paddingLeft="4dip"
+					        android:text="11" />
+     	    		
+    	    		</LinearLayout>
 		       	    
 		       	    <TextView
 				        android:id="@+id/youScoredTextView"
