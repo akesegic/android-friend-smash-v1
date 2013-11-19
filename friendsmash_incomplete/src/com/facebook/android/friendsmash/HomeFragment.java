@@ -90,6 +90,9 @@ public class HomeFragment extends Fragment {
     private ImageView scoresButton;
     private ImageView challengeButton;
     private ImageView bragButton;
+    
+    private TextView numBombs;
+    private TextView numCoins;
 	
 	// Parameters of a WebDialog that should be displayed
     private WebDialog dialog = null;
