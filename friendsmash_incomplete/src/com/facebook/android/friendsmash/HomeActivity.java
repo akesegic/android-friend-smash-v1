@@ -18,7 +18,6 @@ package com.facebook.android.friendsmash;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +25,7 @@ import org.json.JSONObject;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -39,12 +39,7 @@ import android.widget.Toast;
 
 import com.facebook.AppEventsLogger;
 import com.facebook.FacebookRequestError;
-import com.facebook.Request;
-import com.facebook.RequestBatch;
-import com.facebook.Response;
 import com.facebook.Session;
-import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphObject;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
@@ -80,6 +75,8 @@ public class HomeActivity extends FragmentActivity {
  	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        loadInventoryFromPreferences();
         
 		setContentView(R.layout.home);
 		
@@ -195,6 +192,39 @@ public class HomeActivity extends FragmentActivity {
  		super.onDestroy();
     }
 	
+	private void loadInventoryFromPreferences() {
+        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        long lastSavedTime = prefs.getLong("lastSavedTime", 0);
+        
+        if (lastSavedTime == 0) {
+        	// Have never saved state. Initialize.
+            FriendSmashApplication app = (FriendSmashApplication) getApplication();
+    		app.initializeInventory();        	
+        } else {
+            FriendSmashApplication app = (FriendSmashApplication) getApplication();
+            app.setBombs(prefs.getInt("bombs", 0));
+            app.setCoins(prefs.getInt("coins", 0));
+        }
+	}
+	
+	public void buyBombs() {
+		// update bomb and coins count (5 coins per bomb)
+		FriendSmashApplication app = (FriendSmashApplication) getApplication();
+		app.setBombs(app.getBombs()+1);
+		app.setCoins(app.getCoins()-5);
+
+		// save values to device
+        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("bombs", app.getBombs());
+        editor.putInt("coins", app.getCoins());
+        editor.putLong("lastSavedTime", System.currentTimeMillis());
+        editor.commit();
+        
+        // reload inventory values in fragment
+        loadInventoryFragment();
+	}
+	
     private void showFragment(int fragmentIndex, boolean addToBackStack) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
@@ -258,6 +288,16 @@ public class HomeActivity extends FragmentActivity {
 		loadPersonalizedFragment();
 	}
 	
+	// Loads the inventory portion of the HomeFragment. 
+    private void loadInventoryFragment() {
+    	Log.d(TAG, "Loading inventory fragment");
+    	if (isResumed) {
+			((HomeFragment)fragments[HOME]).loadInventory();
+		} else {
+			showError(getString(R.string.error_switching_screens), true);
+		}
+    }
+
 	// Switches to the personalized HomeFragment as the user has just logged in
 	private void loadPersonalizedFragment() {
 		if (isResumed) {

@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.facebook.FacebookRequestError;
 import com.facebook.model.GraphUser;
@@ -191,4 +192,9 @@ public class FriendSmashApplication extends Application {
 		return FRIENDS_KEY;
 	}
 	
+	public void initializeInventory() {
+		this.setBombs(NEW_USER_BOMBS);
+		this.setCoins(NEW_USER_COINS);
+	}
+
 }
