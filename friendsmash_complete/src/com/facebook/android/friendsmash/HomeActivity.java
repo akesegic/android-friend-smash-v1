@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -92,6 +93,8 @@ public class HomeActivity extends FragmentActivity {
  	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        loadInventoryFromPreferences();
     	
     	// Instantiate the fbUiLifecycleHelper and call onCreate() on it
         fbUiLifecycleHelper = new UiLifecycleHelper(this, new Session.StatusCallback() {
@@ -99,6 +102,8 @@ public class HomeActivity extends FragmentActivity {
 			public void call(Session session, SessionState state,
 					Exception exception) {
 				// Add code here to accommodate session changes
+    			Log.d(TAG, "Session state changed: " + state);
+    			
     			updateView();
     			if (fragments[HOME] != null) {
     				if (state.isOpened()) {
@@ -242,6 +247,46 @@ public class HomeActivity extends FragmentActivity {
   		fbUiLifecycleHelper.onDestroy();
     }
 	
+	private void loadInventoryFromPreferences() {
+        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        long lastSavedTime = prefs.getLong("lastSavedTime", 0);
+        
+        if (lastSavedTime == 0) {
+        	// Have never saved state. Initialize.
+            FriendSmashApplication app = (FriendSmashApplication) getApplication();
+    		app.initializeInventory();        	
+        } else {
+            FriendSmashApplication app = (FriendSmashApplication) getApplication();
+            app.setBombs(prefs.getInt("bombs", 0));
+            app.setCoins(prefs.getInt("coins", 0));
+        }
+	}
+	
+	public void buyBombs() {
+		// update bomb and coins count (5 coins per bomb)
+		FriendSmashApplication app = (FriendSmashApplication) getApplication();
+		app.setBombs(app.getBombs()+1);
+		app.setCoins(app.getCoins()-5);
+
+		// save values to device		
+        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("bombs", app.getBombs());
+        editor.putInt("coins", app.getCoins());
+        editor.putLong("lastSavedTime", System.currentTimeMillis());
+        editor.commit();
+        
+        if (ParseUser.getCurrentUser() != null) {
+    		ParseUser.getCurrentUser().put("bombs", app.getBombs());
+    		ParseUser.getCurrentUser().put("coins", app.getCoins());
+    		ParseUser.getCurrentUser().saveInBackground();        	
+        }
+        
+        // reload inventory values in fragment
+        loadInventoryFragment();
+	}
+
+	
     private void showFragment(int fragmentIndex, boolean addToBackStack) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
@@ -371,30 +416,30 @@ public class HomeActivity extends FragmentActivity {
 	}
 	
 	private void logIntoParse(GraphUser fbUser, Session session) {
-		ParseFacebookUtils.logIn(fbUser.getId(), session.getAccessToken(), session.getExpirationDate(), new LogInCallback() {
+		ParseFacebookUtils.logIn(fbUser.getId(), session.getAccessToken(), 
+				session.getExpirationDate(), new LogInCallback() {
 			@Override
 			public void done(ParseUser parseUser, ParseException err) {                   
 				if (parseUser != null) {
 					// The user is logged into Parse.
 					if (parseUser.isNew()) {
 						// This user was created during this session with Facebook Login.                       
-						Log.d(TAG, "New user created.");
+						Log.d(TAG, "ParseUser created.");
 
-						// Initialize new user with some values and persist to Parse.
-						parseUser.put("bombs", FriendSmashApplication.NEW_USER_BOMBS);
-						parseUser.put("coins", FriendSmashApplication.NEW_USER_COINS);
+						// Save our local values to Parse. 
+						FriendSmashApplication app = ((FriendSmashApplication)getApplication());                      
+						parseUser.put("bombs", app.getBombs());
+						parseUser.put("coins", app.getCoins());
 						parseUser.saveInBackground();
-
-						FriendSmashApplication fsApp = ((FriendSmashApplication)getApplication());                      
-						fsApp.setBombs(FriendSmashApplication.NEW_USER_BOMBS);
-						fsApp.setCoins(FriendSmashApplication.NEW_USER_COINS);
 					} else {
 						Log.d(TAG, "User has logged in before. Pull their values: " + parseUser);
 
 						// This user has logged in before. Let's pull and sync their values locally.
-						FriendSmashApplication fsApp = ((FriendSmashApplication)getApplication());                      
-						fsApp.setBombs(parseUser.getInt("bombs"));
-						fsApp.setCoins(parseUser.getInt("coins"));                      
+						// Our conflict resolution logic is quite simple: Accept Parse as the authoritative 
+						// source of data.
+						FriendSmashApplication app = ((FriendSmashApplication)getApplication());                      
+						app.setBombs(parseUser.getInt("bombs"));
+						app.setCoins(parseUser.getInt("coins"));                      
 					}
 
 					loadInventoryFragment();

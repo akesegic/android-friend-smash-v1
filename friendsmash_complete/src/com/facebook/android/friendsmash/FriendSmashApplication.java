@@ -194,6 +194,11 @@ public class FriendSmashApplication extends Application {
 		return FRIENDS_KEY;
 	}
 	
+	public void initializeInventory() {
+		this.setBombs(NEW_USER_BOMBS);
+		this.setCoins(NEW_USER_COINS);
+	}
+	
 	public void onCreate() {
 		Parse.initialize(this, "G47jOTBA55D8nFthkuhpjCxGOeQRZzmMPdWry309", "JQIBnTsmuyboXsXjYpjyPkFmKmPxcinlLEPDwNlC");
 		ParseFacebookUtils.initialize(getString(R.string.app_id));
