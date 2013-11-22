@@ -35,14 +35,14 @@
 		        android:id="@+id/imageView1"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:paddingTop="4dip"
+		        android:paddingTop="18dip"
 		        android:src="@drawable/welcome_panel" />
 		    
 		    <LinearLayout
 		        android:layout_width="wrap_content"
 		    	android:layout_height="wrap_content"
-		        android:layout_marginLeft="86dp"
-		        android:layout_marginTop="10dp"
+		        android:layout_marginLeft="120dp"
+		        android:layout_marginTop="14dp"
 		    	android:orientation="vertical"
 		    	>
 		    	
@@ -53,16 +53,59 @@
 			        style="@style/PlayerNameFont"
 			        android:text="@string/welcome_message" />
 	       	    
-	       	    <TextView
-			        android:id="@+id/youScoredTextView"
+ 				<LinearLayout
 			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        style="@style/YouScoredFont"
-			        android:text="@string/you_scored_message" />
-		        
+			    	android:layout_height="wrap_content"
+			    	android:orientation="horizontal"
+			    	android:paddingTop="4dip"
+			    	>
+	       	    
+     	    		<ImageView
+				        android:id="@+id/coinImage"
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				        android:src="@drawable/coin" />
+     	    		
+     	    		<TextView
+				        android:id="@+id/numCoins"
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				        style="@style/PlayerNameFont"
+				        android:paddingLeft="8dip"
+				        android:paddingTop="4dip"
+				        android:text="" />
+     	    		
+     	    		<ImageView
+				        android:id="@+id/bombButton"
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				        android:paddingLeft="10dip"
+				        android:src="@drawable/bomb" />
+     	    		
+     	    		<TextView
+				        android:id="@+id/numBombs"
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				        style="@style/PlayerNameFont"
+				        android:paddingLeft="8dip"
+				        android:paddingTop="4dip"				        
+				        android:text="" />
+     	    		
+    	    	</LinearLayout>
+    	    		       	    		        
 		    </LinearLayout>
 		    
 	    </RelativeLayout>
+	    
+	  	<TextView
+	        android:id="@+id/youScoredTextView"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+ 			android:gravity="center"
+ 			android:paddingTop="4dp"		        
+	        style="@style/YouScoredFont"
+	        android:text="@string/you_scored_message" />
+	  
 	    
 	    <FrameLayout
 	        android:layout_width="match_parent"
@@ -71,12 +114,11 @@
 		   	
 		   	<com.facebook.widget.LoginButton
 	            android:id="@+id/loginButton"
-	            android:layout_gravity="center"
-	            android:layout_marginBottom="25dp"
-	            custom:login_text=""
-	            custom:logout_text=""
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
+	            android:layout_gravity="center"
+	            custom:login_text=""
+	            custom:logout_text=""
 	            style="@style/login_button" />
 	   	
 	   	</FrameLayout>

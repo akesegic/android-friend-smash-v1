@@ -33,16 +33,16 @@
 		    
 		    <com.facebook.widget.ProfilePictureView
 		        android:id="@+id/userImage"
-		        android:layout_width="69dp"
-		        android:layout_height="69dp"
-		        android:layout_marginLeft="5dp"
-		        android:layout_marginTop="9dp" />
+		        android:layout_width="75dp"
+		        android:layout_height="75dp"
+		        android:layout_marginLeft="18dp"
+		        android:layout_marginTop="18dp" />
 		    
 		    <LinearLayout
 		        android:layout_width="wrap_content"
 		    	android:layout_height="wrap_content"
-		        android:layout_marginLeft="86dp"
-		        android:layout_marginTop="10dp"
+		        android:layout_marginLeft="110dp"
+		        android:layout_marginTop="14dp"
 		    	android:orientation="vertical"
 		    	>
 		    	
@@ -71,7 +71,8 @@
 				        android:layout_width="wrap_content"
 				        android:layout_height="wrap_content"
 				        style="@style/PlayerNameFont"
-				        android:paddingLeft="4dip"
+				        android:paddingLeft="8dip"
+				        android:paddingTop="4dip"
 				        android:text="" />
      	    		
      	    		<ImageView
@@ -86,28 +87,31 @@
 				        android:layout_width="wrap_content"
 				        android:layout_height="wrap_content"
 				        style="@style/PlayerNameFont"
-				        android:paddingLeft="4dip"
+				        android:paddingLeft="8dip"
+				        android:paddingTop="4dip"				        
 				        android:text="" />
      	    		
     	    	</LinearLayout>
-	       	    
-	       	    <TextView
-			        android:id="@+id/youScoredTextView"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        style="@style/YouScoredFont"
-			        android:text="@string/you_scored_message" />
-		        
+	       	    		        
 		    </LinearLayout>
 		    
 	    </RelativeLayout>
-	    
+
+   	    <TextView
+	        android:id="@+id/youScoredTextView"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+ 			android:gravity="center"
+ 			android:paddingTop="4dp"		        
+	        style="@style/YouScoredFont"
+	        android:text="@string/you_scored_message" />
+	    	    
 	    <ImageView
 	        android:id="@+id/playButton"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_marginTop="4dp"
-	        android:layout_gravity="right"
+	        android:layout_marginTop="10dp"
+			android:paddingLeft="70dp"
 	        android:src="@drawable/playnow_button" />
 	    
 	    <ImageView
@@ -115,7 +119,7 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_marginTop="4dp"
-	        android:layout_gravity="left"
+			android:paddingLeft="70dp"
 	        android:src="@drawable/scores_button" />
 	    
 	    <ImageView
@@ -123,7 +127,7 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_marginTop="4dp"
-	        android:layout_gravity="right"
+			android:paddingLeft="70dp"
 	        android:src="@drawable/challenge_button" />
 	    
 	    <ImageView
@@ -131,25 +135,25 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_marginTop="4dp"
-	        android:layout_gravity="left"
+			android:paddingLeft="70dp"
 	        android:src="@drawable/brag_button" />
 	    
-	    <FrameLayout
-	        android:layout_width="match_parent"
-	    	android:layout_height="match_parent"
+	    <LinearLayout
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+			android:paddingLeft="70dp"
+	        android:layout_marginTop="4dp"
 	    	>
 
 		   	<com.facebook.widget.LoginButton
 	            android:id="@+id/loginButton"
-	            android:layout_gravity="bottom|right"
-	            android:layout_marginBottom="4dp"
-	            custom:login_text=""
-	            custom:logout_text=""
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
+	            custom:login_text=""
+	            custom:logout_text=""
 	            style="@style/logout_button" />
 	   	
-	   	</FrameLayout>
+	   	</LinearLayout>
 	
 	</LinearLayout>
   	

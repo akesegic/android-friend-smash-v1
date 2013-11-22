@@ -28,21 +28,29 @@
 	    android:background="@drawable/frontscreen_background" >
 	    
 	    <RelativeLayout
-	        android:layout_width="wrap_content"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content" >
 	        
-		    <ImageView
-		        android:id="@+id/imageView1"
+	        <!-- 
+	        <ImageView
+		        android:id="@+id/title_banner"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:paddingTop="4dip"
+		        android:src="@drawable/title_banner" />
+			 -->
+			 	        	 
+		    <ImageView
+		        android:id="@+id/welcome_panel"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:paddingTop="18dp"
 		        android:src="@drawable/welcome_panel" />
-		     
+		     		    
 		    <LinearLayout
 		        android:layout_width="wrap_content"
 		    	android:layout_height="wrap_content"
-		        android:layout_marginLeft="86dp"
-		        android:layout_marginTop="10dp"
+		        android:layout_marginLeft="120dp"
+		        android:layout_marginTop="14dp"
 		    	android:orientation="vertical"
 		    	>
 		    	
@@ -71,7 +79,8 @@
 				        android:layout_width="wrap_content"
 				        android:layout_height="wrap_content"
 				        style="@style/PlayerNameFont"
-				        android:paddingLeft="4dip"
+				        android:paddingLeft="8dip"
+				        android:paddingTop="4dip"
 				        android:text="" />
      	    		
      	    		<ImageView
@@ -86,28 +95,31 @@
 				        android:layout_width="wrap_content"
 				        android:layout_height="wrap_content"
 				        style="@style/PlayerNameFont"
-				        android:paddingLeft="4dip"
+				        android:paddingLeft="8dip"
+				        android:paddingTop="4dip"				        
 				        android:text="" />
      	    		
     	    	</LinearLayout>
-	       	    
-	       	    <TextView
-			        android:id="@+id/youScoredTextView"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        style="@style/YouScoredFont"
-			        android:text="@string/you_scored_message" />
-		        
+	       	    		        
 		    </LinearLayout>
-		    
+		    		    
 	    </RelativeLayout>
-	    
+
+	    <TextView
+	        android:id="@+id/youScoredTextView"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+ 			android:gravity="center"
+ 			android:paddingTop="4dp"		        
+	        style="@style/YouScoredFont"
+	        android:text="@string/you_scored_message" />
+	    	    
 	    <ImageView
 	        android:id="@+id/playButton"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_marginTop="4dp"
-	        android:layout_gravity="right"
+	        android:layout_marginTop="10dp"
+			android:paddingLeft="70dp"
 	        android:src="@drawable/playnow_button" />
 	
 	</LinearLayout>
