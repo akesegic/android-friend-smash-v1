@@ -207,12 +207,7 @@ public class GameFragment extends Fragment {
 			setScreenWidth(display.getWidth());
 			setScreenHeight(display.getHeight());
 		}
-		
-		// Always keep the Action Bar hidden
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			getActivity().getActionBar().hide();
-		}
-		
+				
 		// Instantiate the fireImageTask for future fired images
 		fireImageTask = new Runnable()
 		{
