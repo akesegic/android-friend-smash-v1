@@ -263,12 +263,12 @@ public class HomeActivity extends FragmentActivity {
 	}
 	
 	public void buyBombs() {
-		// update bomb and coins count (5 coins per bomb)
+		// Update bomb and coins count (5 coins per bomb).
 		FriendSmashApplication app = (FriendSmashApplication) getApplication();
 		app.setBombs(app.getBombs()+1);
 		app.setCoins(app.getCoins()-5);
 
-		// save values to device		
+		// Save values to device.		
         SharedPreferences prefs = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt("bombs", app.getBombs());
@@ -276,13 +276,14 @@ public class HomeActivity extends FragmentActivity {
         editor.putLong("lastSavedTime", System.currentTimeMillis());
         editor.commit();
         
+        // Store data to Parse too.
         if (ParseUser.getCurrentUser() != null) {
     		ParseUser.getCurrentUser().put("bombs", app.getBombs());
     		ParseUser.getCurrentUser().put("coins", app.getCoins());
     		ParseUser.getCurrentUser().saveInBackground();        	
         }
         
-        // reload inventory values in fragment
+        // Reload inventory values in fragment.
         loadInventoryFragment();
 	}
 
