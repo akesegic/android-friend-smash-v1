@@ -20,11 +20,17 @@
     >
 
     <style name="AppTheme" parent="android:Theme.Light" >
+        <!-- 
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>   
+        <item name="android:windowTitleSize">0dp</item>
+         -->     
     </style>
+             
    	<style name="PlayerNameFont" parent="@android:style/TextAppearance.Large">
        	<item name="android:textColor">#FFFFFF</item>
    	</style>
-   	<style name="YouScoredFont" parent="@android:style/TextAppearance.Small">
+   	<style name="YouScoredFont" parent="@android:style/TextAppearance.Medium">
        	<item name="android:textColor">#FFFFFF</item>
    	</style>
    	<style name="ScoreFont" parent="@android:style/TextAppearance.Medium">
