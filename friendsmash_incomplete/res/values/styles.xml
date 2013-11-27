@@ -20,11 +20,6 @@
     >
 
     <style name="AppTheme" parent="android:Theme.Light" >
-        <!-- 
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>   
-        <item name="android:windowTitleSize">0dp</item>
-         -->     
     </style>
              
    	<style name="PlayerNameFont" parent="@android:style/TextAppearance.Large">
