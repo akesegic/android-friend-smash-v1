@@ -31,24 +31,31 @@
 	        android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    >
-	    
+
+	       	<ImageView
+		        android:id="@+id/title_banner"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:src="@drawable/title_banner_land" />
+	        	    
 		    <RelativeLayout
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:layout_gravity="left" >
+		        android:layout_gravity="left" 
+		       	android:paddingTop="68dp">
 		        
 			    <ImageView
 			        android:id="@+id/imageView1"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
-			        android:paddingTop="4dip"
+			        android:paddingTop="18dp"
 			        android:src="@drawable/welcome_panel" />
 			    
 			    <LinearLayout
 			        android:layout_width="wrap_content"
 			    	android:layout_height="wrap_content"
-			        android:layout_marginLeft="86dp"
-			        android:layout_marginTop="10dp"
+			        android:layout_marginLeft="120dp"
+			        android:layout_marginTop="14dp"
 			    	android:orientation="vertical"
 			    	>
 			    	
@@ -59,7 +66,7 @@
 				        style="@style/PlayerNameFont"
 				        android:text="@string/welcome_message" />
 
-<LinearLayout
+		       	    <LinearLayout
 				        android:layout_width="wrap_content"
 				    	android:layout_height="wrap_content"
 				    	android:orientation="horizontal"
@@ -77,7 +84,8 @@
 					        android:layout_width="wrap_content"
 					        android:layout_height="wrap_content"
 					        style="@style/PlayerNameFont"
-					        android:paddingLeft="4dip"
+					        android:paddingLeft="8dip"
+					        android:paddingTop="4dip"
 					        android:text="74" />
 	     	    		
 	     	    		<ImageView
@@ -92,11 +100,12 @@
 					        android:layout_width="wrap_content"
 					        android:layout_height="wrap_content"
 					        style="@style/PlayerNameFont"
-					        android:paddingLeft="4dip"
+					        android:paddingLeft="8dip"
+					        android:paddingTop="4dip"
 					        android:text="11" />
      	    		
     	    		</LinearLayout>
-    	    				       	    		       	    
+		       	    		       	    
 		       	    <TextView
 				        android:id="@+id/youScoredTextView"
 				        android:layout_width="wrap_content"
@@ -108,14 +117,30 @@
 			    
 		    </RelativeLayout>
 		    
-		    <ImageView
-		        android:id="@+id/playButton"
+			<RelativeLayout
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:layout_marginTop="4dp"
-		        android:layout_gravity="right"
-		        android:src="@drawable/playnow_button" />
+		        android:layout_gravity="left" 
+		       	android:paddingTop="210dp"
+		       	android:layout_marginLeft="60dp">
+			    
+			    <ImageView
+			        android:id="@+id/playButton"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:src="@drawable/playnow_button" />
+			    
+			</RelativeLayout>		    
 	
+			<RelativeLayout
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_gravity="right"
+		        android:layout_marginRight="60dp" 
+		       	android:paddingTop="140dp">
+			   				   	
+			</RelativeLayout>
+						
 	    </FrameLayout>
 	    
 	</LinearLayout>
