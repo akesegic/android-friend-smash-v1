@@ -21,12 +21,14 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.facebook.FacebookRequestError;
 import com.facebook.model.GraphUser;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseUser;
 
 /**
  *  Use a custom Application class to pass state data between Activities.
@@ -194,14 +196,58 @@ public class FriendSmashApplication extends Application {
 		return FRIENDS_KEY;
 	}
 	
-	public void initializeInventory() {
-		this.setBombs(NEW_USER_BOMBS);
-		this.setCoins(NEW_USER_COINS);
+	public void saveInventory() {
+		SharedPreferences prefs = getApplicationContext().getSharedPreferences("Inventory", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("bombs", getBombs());
+        editor.putInt("coins", getCoins());
+        editor.putLong("lastSavedTime", System.currentTimeMillis());
+        editor.commit();		
+        
+        // Store data to Parse too.
+        if (ParseUser.getCurrentUser() != null) {
+    		ParseUser.getCurrentUser().put("bombs", getBombs());
+    		ParseUser.getCurrentUser().put("coins", getCoins());
+    		ParseUser.getCurrentUser().saveInBackground();        	
+        }
+	}
+	
+	
+	/*
+	 * The logic here is to check if we're connected to Parse. If we are, accept the data
+	 * there as the authoritative source of data. If we are not connected, then look for
+	 * data that is stored locally. If that doesn't exist, then use some default values.
+	 * 
+	 * In your own project, you may want to have more sophisticated conflict resolution. 
+	 * For example, you may want to use lastSavedTime as a timestamp that could be 
+	 * compared to the timestamp of data pulled from Parse and then use whichever data
+	 * was the most recent. You may want to do this if you want support offline gaming. 
+	 * 
+	 */
+	public void loadInventory() {
+        if (ParseUser.getCurrentUser() != null) {
+    		setBombs(ParseUser.getCurrentUser().getInt("bombs"));
+    		setCoins(ParseUser.getCurrentUser().getInt("coins"));                      
+        } else { 
+	        SharedPreferences prefs = getApplicationContext().getSharedPreferences("Inventory", MODE_PRIVATE);
+	        long lastSavedTime = prefs.getLong("lastSavedTime", 0);
+	
+	        if (lastSavedTime == 0) {
+	        	// Have never saved state. Initialize.
+	    		setBombs(NEW_USER_BOMBS);
+	    		setCoins(NEW_USER_COINS);
+	        } else {
+	            setBombs(prefs.getInt("bombs", 0));
+	            setCoins(prefs.getInt("coins", 0));
+	        }
+        }
 	}
 	
 	public void onCreate() {
-		Parse.initialize(this, "G47jOTBA55D8nFthkuhpjCxGOeQRZzmMPdWry309", "JQIBnTsmuyboXsXjYpjyPkFmKmPxcinlLEPDwNlC");
+		Parse.initialize(this, getString(R.string.parse_app_id), getString(R.string.parse_client_key));
 		ParseFacebookUtils.initialize(getString(R.string.app_id));
+
+		loadInventory();		
 	}
 	
 }

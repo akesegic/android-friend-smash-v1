@@ -25,7 +25,6 @@ import org.json.JSONObject;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -70,13 +69,11 @@ public class HomeActivity extends FragmentActivity {
  	// Constructor
  	public HomeActivity() {
  		super();
- 	}
+ 	} 	
  	
  	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        loadInventoryFromPreferences();
         
 		setContentView(R.layout.home);
 		
@@ -191,35 +188,15 @@ public class HomeActivity extends FragmentActivity {
     public void onDestroy() {
  		super.onDestroy();
     }
-	
-	private void loadInventoryFromPreferences() {
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        long lastSavedTime = prefs.getLong("lastSavedTime", 0);
-        
-        if (lastSavedTime == 0) {
-        	// Have never saved state. Initialize.
-            FriendSmashApplication app = (FriendSmashApplication) getApplication();
-    		app.initializeInventory();        	
-        } else {
-            FriendSmashApplication app = (FriendSmashApplication) getApplication();
-            app.setBombs(prefs.getInt("bombs", 0));
-            app.setCoins(prefs.getInt("coins", 0));
-        }
-	}
-	
+		
 	public void buyBombs() {
 		// update bomb and coins count (5 coins per bomb)
 		FriendSmashApplication app = (FriendSmashApplication) getApplication();
 		app.setBombs(app.getBombs()+1);
 		app.setCoins(app.getCoins()-5);
 
-		// save values to device
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt("bombs", app.getBombs());
-        editor.putInt("coins", app.getCoins());
-        editor.putLong("lastSavedTime", System.currentTimeMillis());
-        editor.commit();
+		// save inventory values
+		app.saveInventory();
         
         // reload inventory values in fragment
         loadInventoryFragment();

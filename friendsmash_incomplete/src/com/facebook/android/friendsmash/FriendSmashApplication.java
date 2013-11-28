@@ -21,7 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.app.Application;
-import android.util.Log;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.facebook.FacebookRequestError;
 import com.facebook.model.GraphUser;
@@ -191,10 +192,31 @@ public class FriendSmashApplication extends Application {
 	public static String getFriendsKey() {
 		return FRIENDS_KEY;
 	}
+		
+	public void saveInventory() {
+		SharedPreferences prefs = getApplicationContext().getSharedPreferences("Inventory", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("bombs", getBombs());
+        editor.putInt("coins", getCoins());
+        editor.putLong("lastSavedTime", System.currentTimeMillis());
+        editor.commit();		
+	}
 	
-	public void initializeInventory() {
-		this.setBombs(NEW_USER_BOMBS);
-		this.setCoins(NEW_USER_COINS);
+	public void loadInventory() {
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences("Inventory", MODE_PRIVATE);
+        long lastSavedTime = prefs.getLong("lastSavedTime", 0);
+
+        if (lastSavedTime == 0) {
+        	// Have never saved state. Initialize.
+    		setBombs(NEW_USER_BOMBS);
+    		setCoins(NEW_USER_COINS);
+        } else {
+            setBombs(prefs.getInt("bombs", 0));
+            setCoins(prefs.getInt("coins", 0));
+        }
 	}
 
+	public void onCreate() {
+		loadInventory();		
+	}
 }

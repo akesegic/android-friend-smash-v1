@@ -93,9 +93,7 @@ public class HomeActivity extends FragmentActivity {
  	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        loadInventoryFromPreferences();
-    	
+            	
     	// Instantiate the fbUiLifecycleHelper and call onCreate() on it
         fbUiLifecycleHelper = new UiLifecycleHelper(this, new Session.StatusCallback() {
     		@Override
@@ -247,46 +245,18 @@ public class HomeActivity extends FragmentActivity {
   		fbUiLifecycleHelper.onDestroy();
     }
 	
-	private void loadInventoryFromPreferences() {
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        long lastSavedTime = prefs.getLong("lastSavedTime", 0);
-        
-        if (lastSavedTime == 0) {
-        	// Have never saved state. Initialize.
-            FriendSmashApplication app = (FriendSmashApplication) getApplication();
-    		app.initializeInventory();        	
-        } else {
-            FriendSmashApplication app = (FriendSmashApplication) getApplication();
-            app.setBombs(prefs.getInt("bombs", 0));
-            app.setCoins(prefs.getInt("coins", 0));
-        }
-	}
-	
 	public void buyBombs() {
 		// Update bomb and coins count (5 coins per bomb).
 		FriendSmashApplication app = (FriendSmashApplication) getApplication();
 		app.setBombs(app.getBombs()+1);
 		app.setCoins(app.getCoins()-5);
 
-		// Save values to device.		
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt("bombs", app.getBombs());
-        editor.putInt("coins", app.getCoins());
-        editor.putLong("lastSavedTime", System.currentTimeMillis());
-        editor.commit();
-        
-        // Store data to Parse too.
-        if (ParseUser.getCurrentUser() != null) {
-    		ParseUser.getCurrentUser().put("bombs", app.getBombs());
-    		ParseUser.getCurrentUser().put("coins", app.getCoins());
-    		ParseUser.getCurrentUser().saveInBackground();        	
-        }
+		// save inventory values
+		app.saveInventory();
         
         // Reload inventory values in fragment.
         loadInventoryFragment();
 	}
-
 	
     private void showFragment(int fragmentIndex, boolean addToBackStack) {
         FragmentManager fm = getSupportFragmentManager();
@@ -427,20 +397,16 @@ public class HomeActivity extends FragmentActivity {
 						// This user was created during this session with Facebook Login.                       
 						Log.d(TAG, "ParseUser created.");
 
-						// Save our local values to Parse. 
-						FriendSmashApplication app = ((FriendSmashApplication)getApplication());                      
-						parseUser.put("bombs", app.getBombs());
-						parseUser.put("coins", app.getCoins());
-						parseUser.saveInBackground();
+						// Call saveInventory() which will save data to Parse if connected. 
+						FriendSmashApplication app = ((FriendSmashApplication)getApplication());
+						app.saveInventory();
 					} else {
 						Log.d(TAG, "User has logged in before. Pull their values: " + parseUser);
 
-						// This user has logged in before. Let's pull and sync their values locally.
-						// Our conflict resolution logic is quite simple: Accept Parse as the authoritative 
-						// source of data.
-						FriendSmashApplication app = ((FriendSmashApplication)getApplication());                      
-						app.setBombs(parseUser.getInt("bombs"));
-						app.setCoins(parseUser.getInt("coins"));                      
+						// This user has logged in before. Call loadInventory() which has logic
+						// to check Parse if connected.
+						FriendSmashApplication app = ((FriendSmashApplication)getApplication());
+						app.loadInventory();
 					}
 
 					loadInventoryFragment();
