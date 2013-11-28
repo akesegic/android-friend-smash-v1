@@ -59,45 +59,6 @@
 			        style="@style/PlayerNameFont"
 			        android:text="@string/welcome_message" />
 	       	    
- 				<LinearLayout
-			        android:layout_width="wrap_content"
-			    	android:layout_height="wrap_content"
-			    	android:orientation="horizontal"
-			    	android:paddingTop="4dip"
-			    	>
-	       	    
-     	    		<ImageView
-				        android:id="@+id/coinImage"
-				        android:layout_width="wrap_content"
-				        android:layout_height="wrap_content"
-				        android:src="@drawable/coin" />
-     	    		
-     	    		<TextView
-				        android:id="@+id/numCoins"
-				        android:layout_width="wrap_content"
-				        android:layout_height="wrap_content"
-				        style="@style/PlayerNameFont"
-				        android:paddingLeft="8dip"
-				        android:paddingTop="4dip"
-				        android:text="" />
-     	    		
-     	    		<ImageView
-				        android:id="@+id/bombButton"
-				        android:layout_width="wrap_content"
-				        android:layout_height="wrap_content"
-				        android:paddingLeft="10dip"
-				        android:src="@drawable/bomb" />
-     	    		
-     	    		<TextView
-				        android:id="@+id/numBombs"
-				        android:layout_width="wrap_content"
-				        android:layout_height="wrap_content"
-				        style="@style/PlayerNameFont"
-				        android:paddingLeft="8dip"
-				        android:paddingTop="4dip"				        
-				        android:text="" />
-     	    		
-    	    	</LinearLayout>
     	    		       	    		        
 		    </LinearLayout>
 		    
