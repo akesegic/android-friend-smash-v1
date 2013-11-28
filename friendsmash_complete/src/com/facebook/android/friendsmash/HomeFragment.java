@@ -150,19 +150,6 @@ public class HomeFragment extends Fragment {
 		if (!FriendSmashApplication.IS_SOCIAL) {
 			v = inflater.inflate(R.layout.fragment_home, parent, false);
 			
-			numBombs = (TextView)v.findViewById(R.id.numBombs);
-			numCoins = (TextView)v.findViewById(R.id.numCoins);
-			loadInventory();
-			
-			ImageView bombButton = (ImageView)v.findViewById(R.id.bombButton);
-			bombButton.setOnTouchListener(new View.OnTouchListener() {
-				@Override
-				public boolean onTouch(View v, MotionEvent event) {
-					HomeActivity homeActivity = (HomeActivity) getActivity();
-					homeActivity.buyBombs();
-					return false;
-				}
-			});
 		} else {
 			v = inflater.inflate(R.layout.fragment_home_fb_logged_in, parent, false);
 			
@@ -174,21 +161,7 @@ public class HomeFragment extends Fragment {
 			
 			// Personalize this HomeFragment
 			personalizeHomeFragment();
-			
-			numBombs = (TextView)v.findViewById(R.id.numBombs);
-			numCoins = (TextView)v.findViewById(R.id.numCoins);
-			loadInventory();
-			
-			ImageView bombButton = (ImageView)v.findViewById(R.id.bombButton);
-			bombButton.setOnTouchListener(new View.OnTouchListener() {
-				@Override
-				public boolean onTouch(View v, MotionEvent event) {
-					HomeActivity homeActivity = (HomeActivity) getActivity();
-					homeActivity.buyBombs();
-					return false;
-				}
-			});
-			
+						
 			scoresButton = (ImageView)v.findViewById(R.id.scoresButton);
 			scoresButton.setOnTouchListener(new View.OnTouchListener() {
 	            @Override
@@ -218,6 +191,20 @@ public class HomeFragment extends Fragment {
 			
 			updateButtonVisibility();
 		}
+		
+		numBombs = (TextView)v.findViewById(R.id.numBombs);
+		numCoins = (TextView)v.findViewById(R.id.numCoins);
+		loadInventory();
+		
+		ImageView bombButton = (ImageView)v.findViewById(R.id.bombButton);
+		bombButton.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				HomeActivity homeActivity = (HomeActivity) getActivity();
+				homeActivity.buyBombs();
+				return false;
+			}
+		});
 		
 		gameOverContainer = (FrameLayout)v.findViewById(R.id.gameOverContainer);
 		
