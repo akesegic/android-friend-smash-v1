@@ -64,7 +64,6 @@ import com.facebook.model.GraphUser;
 import com.facebook.widget.FacebookDialog;
 import com.facebook.widget.ProfilePictureView;
 import com.facebook.widget.WebDialog;
-import com.parse.ParseUser;
 
 /**
  *  Fragment to be shown once the user is logged in on the social version of the game or
