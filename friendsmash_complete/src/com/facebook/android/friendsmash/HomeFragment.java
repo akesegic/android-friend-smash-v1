@@ -403,6 +403,9 @@ public class HomeFragment extends Fragment {
 	
 	private void startGame() {
         Intent i = new Intent(getActivity(), GameActivity.class);
+        Bundle bundle = new Bundle();
+		bundle.putInt("num_bombs", ((FriendSmashApplication) getActivity().getApplication()).getBombs());
+		i.putExtras(bundle);
         startActivityForResult(i, 0);
 	}
 	
@@ -437,8 +440,29 @@ public class HomeFragment extends Fragment {
 			Session.getActiveSession().onActivityResult(getActivity(), requestCode, resultCode, data);
         } else if (resultCode == Activity.RESULT_OK && data != null) {
         	// Finished a game
+        	
+        	// Get the parameters passed through including the score
 			Bundle bundle = data.getExtras();
 			application.setScore(bundle.getInt("score"));
+			
+			// Save coins and bombs data to parse
+			int coinsCollected = (bundle.getInt("coins_collected"));
+			application.setCoinsCollected(coinsCollected);
+			if (coinsCollected > 0) {
+				application.setCoins(application.getCoins()+coinsCollected);
+			}
+			int bombsUsed = (bundle.getInt("bombs_used"));
+			if (bombsUsed > 0) {
+				application.setBombs(application.getBombs()-bombsUsed);
+			}
+			
+			// Save inventory values
+			application.saveInventory();
+	        
+	        // Reload inventory values
+	        loadInventory();
+			
+			// Update the UI
 			updateYouScoredTextView();
 			updateButtonVisibility();
 			completeGameOver(1500);
@@ -466,6 +490,7 @@ public class HomeFragment extends Fragment {
 		Intent i = new Intent(getActivity(), GameActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putString("user_id", userId);
+		bundle.putInt("num_bombs", ((FriendSmashApplication) getActivity().getApplication()).getBombs());
 		i.putExtras(bundle);
 		startActivityForResult(i, 0);
 	}
@@ -474,7 +499,10 @@ public class HomeFragment extends Fragment {
 	void updateYouScoredTextView() {
 		if (youScoredTextView != null) {
 			if (application.getScore() >= 0) {
-				youScoredTextView.setText("You Scored " + application.getScore() + "!");
+				youScoredTextView.setText("You smashed " + application.getLastFriendSmashedName() +
+						" " + application.getScore() + (application.getScore() == 1 ? " time!" : " times!") +
+						"\n" + "Collected " + application.getCoinsCollected() +
+						(application.getCoinsCollected() == 1 ? " coin!" : " coins!"));
 			}
 			else {
 				youScoredTextView.setText(getResources().getString(R.string.no_score));

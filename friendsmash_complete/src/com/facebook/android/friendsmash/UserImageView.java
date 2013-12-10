@@ -37,6 +37,7 @@ import android.widget.ImageView;
 public class UserImageView extends ImageView {
 
 	private boolean shouldSmash;
+	private boolean isCoin;
 	private boolean wrongImageSmashed = false;
 	private boolean isVoid = false;
 	private int extraPoints = 0;
@@ -50,10 +51,11 @@ public class UserImageView extends ImageView {
 	}
 	
 	// Constructor used by GameFragment to pass in an instance of itself
-	public UserImageView(Context context, boolean shouldSmash) {
+	public UserImageView(Context context, boolean shouldSmash, boolean isCoin) {
 		super(context);
 		
 		setShouldSmash(shouldSmash);
+		setIsCoin(isCoin);
 		
 		upMovementAnimatorSet = new AnimatorSet();
 		downMovementAnimatorSet = new AnimatorSet();
@@ -199,6 +201,14 @@ public class UserImageView extends ImageView {
 
 	public void setShouldSmash(boolean shouldSmash) {
 		this.shouldSmash = shouldSmash;
+	}
+	
+	public boolean isCoin() {
+		return isCoin;
+	}
+
+	public void setIsCoin(boolean isCoin) {
+		this.isCoin = isCoin;
 	}
 
 	public boolean isVoid() {

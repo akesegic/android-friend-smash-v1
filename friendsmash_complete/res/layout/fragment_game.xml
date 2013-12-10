@@ -47,6 +47,14 @@
 	        android:layout_marginTop="5dp"
 	    />
         
+        <LinearLayout
+            android:id="@+id/bombsContainer"
+	        android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:orientation="horizontal"
+	        android:layout_marginTop="5dp"
+	    />
+        
     </LinearLayout>
     
     <TextView
@@ -59,6 +67,14 @@
         style="@style/ScoreFont"
         android:text="@string/score"
     />
+    
+   	<ImageView
+        android:id="@+id/bombButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        android:src="@drawable/bomb_large"
+       />
     
     <FrameLayout android:id="@+id/progressContainer"
 	    android:background="@drawable/frontscreen_background"

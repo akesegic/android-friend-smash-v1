@@ -49,9 +49,11 @@ public class FriendSmashApplication extends Application {
 	// Player inventory
 	public static int NEW_USER_BOMBS = 5;
 	public static int NEW_USER_COINS = 100;
+	public static int NUM_BOMBS_ALLOWED_IN_GAME = 3;
 	private int score = -1;
 	private int bombs = 0;
-	private int coins = 0;	
+	private int coins = 0;
+	private int coinsCollected = 0;
 	
 	/* Facebook application attributes */
 
@@ -69,6 +71,9 @@ public class FriendSmashApplication extends Application {
 		
 	// ID of the last friend smashed (linked to the current score)
 	private String lastFriendSmashedID = null;
+	
+	// Name of the last friend smashed
+	private String lastFriendSmashedName = null;
 	
 	// List of ordered ScoreboardEntry objects in order from highest to lowest score to
 	// be shown in the ScoreboardFragment
@@ -102,6 +107,14 @@ public class FriendSmashApplication extends Application {
 
 	public void setCoins(int coins) {
 		this.coins = coins;		
+	}
+	
+	public int getCoinsCollected() {
+		return coinsCollected;
+	}
+
+	public void setCoinsCollected(int coinsCollected) {
+		this.coinsCollected = coinsCollected;		
 	}
 	
 	/* Facebook attribute getters & setters */
@@ -166,6 +179,14 @@ public class FriendSmashApplication extends Application {
 
 	public void setLastFriendSmashedID(String lastFriendSmashedID) {
 		this.lastFriendSmashedID = lastFriendSmashedID;
+	}
+	
+	public String getLastFriendSmashedName() {
+		return lastFriendSmashedName;
+	}
+
+	public void setLastFriendSmashedName(String lastFriendSmashedName) {
+		this.lastFriendSmashedName = lastFriendSmashedName;
 	}
 
 	public ArrayList<ScoreboardEntry> getScoreboardEntriesList() {
