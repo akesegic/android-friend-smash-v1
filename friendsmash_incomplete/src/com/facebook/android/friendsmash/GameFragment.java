@@ -97,6 +97,12 @@ public class GameFragment extends Fragment {
 	// LinearyLayout containing the lives images
 	private LinearLayout livesContainer;
 	
+	// LinearyLayout containing the bombs images
+	private LinearLayout bombsContainer;
+	
+	// ImageView acting as the button for exploding a bomb
+	private ImageView bombButton;
+
 	// Icon width for the friend images to smash
 	private int iconWidth;
 
@@ -140,6 +146,15 @@ public class GameFragment extends Fragment {
 	// Lives the user has remaining
 	private int lives = 3;
 	
+	// Bombs the user has remaining
+	private int bombsRemaining = FriendSmashApplication.NUM_BOMBS_ALLOWED_IN_GAME;
+	
+	// Bombs the user has used
+	private int bombsUsed = 0;
+	
+	// Coins the user has collected
+	private int coinsCollected = 0;
+
 	// Boolean set to true if first image has been fired
 	private boolean firstImageFired = false;
 	
@@ -187,6 +202,15 @@ public class GameFragment extends Fragment {
 		smashPlayerNameTextView = (TextView)v.findViewById(R.id.smashPlayerNameTextView);
 		scoreTextView = (TextView)v.findViewById(R.id.scoreTextView);
 		livesContainer = (LinearLayout)v.findViewById(R.id.livesContainer);
+		bombsContainer = (LinearLayout)v.findViewById(R.id.bombsContainer);
+		bombButton = (ImageView)v.findViewById(R.id.bombButton);
+		bombButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+			public boolean onTouch(View v, MotionEvent event) {
+            	onBombButtonTouched();
+				return false;
+			}
+        });
 		
 		// Set the progressContainer as invisible by default
 		progressContainer.setVisibility(View.INVISIBLE);
@@ -222,12 +246,33 @@ public class GameFragment extends Fragment {
 		
 		// Refresh the lives
 		setLives(getLives());
-		
+
+		// Refresh the bombs
+		setBombsRemaining(getBombsRemaining());
+
 		// Note: Images will start firing in the onResume method below
 		
 		return v;
 	}
 	
+	// Called when the Bombs button is touched
+	private void onBombButtonTouched() {
+		if (getBombsRemaining() > 0) {
+			// Hide all ImageViews and invalidate them
+			hideAllUserImageViews();
+			markAllUserImageViewsAsVoid();
+			
+			// Increment the bombsUsed integer
+			bombsUsed++;
+			
+			// Subtract a bomb
+			setBombsRemaining(getBombsRemaining() - 1);
+		} else {
+			// No bombs are remaining, so make sure they are all removed from the UI
+			setBombsRemaining(0);
+		}
+	}
+
 	// Sets the name of the player to smash in the top left TextView
 	@SuppressWarnings("unused")
 	private void setSmashPlayerNameTextView() {
@@ -283,6 +328,12 @@ public class GameFragment extends Fragment {
 	    fireImage(imageView, extraImage);
 	}
 	
+	// Set the image on the UserImageView to the coin and fire it
+	private void setCoinImageAndFire(UserImageView imageView, boolean extraImage) {
+	    imageView.setImageResource(R.drawable.coin);
+	    fireImage(imageView, extraImage);
+	}
+
 	// Fire the UserImageView and setup the timer to start another image shortly (as long as the image that
 	// is fired isn't an extra image)
 	private void fireImage(final UserImageView imageView, boolean extraImage) {
@@ -295,7 +346,7 @@ public class GameFragment extends Fragment {
 			@Override
 			public void onAnimationEnd(Animator animation) {
 				if (!imageView.isWrongImageSmashed()) {
-					if (imageView.getVisibility() == View.VISIBLE && imageView.shouldSmash() && !imageView.isVoid()) {
+					if (imageView.getVisibility() == View.VISIBLE && imageView.shouldSmash() && !imageView.isVoid() && !imageView.isCoin()) {
 						// Image is still visible, so user didn't smash it and they should have done (and it isn't void), so decrement the lives by one
 						setLives(getLives() - 1);
 					}
@@ -359,9 +410,13 @@ public class GameFragment extends Fragment {
 			
 			String requestID = null;
 			String userID = null;
+			int numBombsRemaining = 0;
 			if (bundle != null) {
 				requestID = bundle.getString("request_id");
 				userID = bundle.getString("user_id");
+				numBombsRemaining = bundle.getInt("num_bombs") <= FriendSmashApplication.NUM_BOMBS_ALLOWED_IN_GAME ?
+						bundle.getInt("num_bombs") : FriendSmashApplication.NUM_BOMBS_ALLOWED_IN_GAME;
+				setBombsRemaining(numBombsRemaining);
 			}
 			
 			if (requestID != null && friendToSmashIDProvided == null) {
@@ -505,25 +560,32 @@ public class GameFragment extends Fragment {
         // 1 in every 5 images should be a celebrity the user should not smash - calculate that here
         // Unless it is the first image fired, in which case it should always be the smashable image
         boolean shouldSmash = true;
+        boolean isCoin = false;
         if (firstImageFired) {
         	if (randomGenerator.nextInt(5) == 4 && firstImageFired) {
             	shouldSmash = false;
-            } 
+            } else if (randomGenerator.nextInt(8) == 7 && firstImageFired) {
+            	isCoin = true;
+            }
         } else if (!firstImageFired) {
         	shouldSmash = true;
         	firstImageFired = true;
         }
 		
 		// Create a new ImageView with a user to smash
-        final UserImageView userImageView = (new UserImageView(getActivity(), shouldSmash));
+        final UserImageView userImageView = (new UserImageView(getActivity(), shouldSmash, isCoin));
         userImageView.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (userImageView.shouldSmash()) {
 					// Smashed the right image ...
 					
-					// Increment the score
-					setScore(getScore() + 1 + userImageView.getExtraPoints());
+					if (userImageView.isCoin()) {
+						coinsCollected++;
+					} else {
+						// Increment the score
+						setScore(getScore() + 1 + userImageView.getExtraPoints());
+					}
 					
 					// Hide the userImageView
 					v.setVisibility(View.GONE);
@@ -544,28 +606,32 @@ public class GameFragment extends Fragment {
         // Set the bitmap of the userImageView ...
         if (userImageView.shouldSmash()) {
         	// The user should smash this image, so set the correct image
-	        if (FriendSmashApplication.IS_SOCIAL) {
-				// User is logged into FB ...
-				if (friendToSmashBitmap != null) {
-					// Bitmap for the friend to smash has already been retrieved, so use this
-					setFriendImageAndFire(userImageView, friendToSmashBitmap, extraImage);
+        	if (userImageView.isCoin()) {
+        		setCoinImageAndFire(userImageView, extraImage);
+        	} else {
+		        if (FriendSmashApplication.IS_SOCIAL) {
+					// User is logged into FB ...
+					if (friendToSmashBitmap != null) {
+						// Bitmap for the friend to smash has already been retrieved, so use this
+						setFriendImageAndFire(userImageView, friendToSmashBitmap, extraImage);
+					} else {
+						// Otherwise, the Bitmap for the friend to smash hasn't been retrieved, so retrieve it and set it
+						
+						// Show the spinner while retrieving
+						progressContainer.setVisibility(View.VISIBLE);
+						
+						// If a friend has been passed in, use that attribute, otherwise use the random friend that has been selected
+						final String friendToSmashID = friendToSmashIDProvided != null ? friendToSmashIDProvided :
+							((FriendSmashApplication) getActivity().getApplication()).getFriend(friendToSmashIndex).getId();
+						
+						// Fetch the bitmap and fire the image
+						fetchFriendBitmapAndFireImages(userImageView, friendToSmashID, extraImage);
+					}
 				} else {
-					// Otherwise, the Bitmap for the friend to smash hasn't been retrieved, so retrieve it and set it
-					
-					// Show the spinner while retrieving
-					progressContainer.setVisibility(View.VISIBLE);
-					
-					// If a friend has been passed in, use that attribute, otherwise use the random friend that has been selected
-					final String friendToSmashID = friendToSmashIDProvided != null ? friendToSmashIDProvided :
-						((FriendSmashApplication) getActivity().getApplication()).getFriend(friendToSmashIndex).getId();
-					
-					// Fetch the bitmap and fire the image
-					fetchFriendBitmapAndFireImages(userImageView, friendToSmashID, extraImage);
+					// User is not logged into FB ...
+					setCelebImageAndFire(userImageView, celebToSmashIndex, extraImage);
 				}
-			} else {
-				// User is not logged into FB ...
-				setCelebImageAndFire(userImageView, celebToSmashIndex, extraImage);
-			}
+        	}
         } else {
         	// The user should not smash this image, so set it to a random celebrity (but not the one being shown if it's the non-social game)
         	int randomCelebToSmashIndex;
@@ -638,6 +704,15 @@ public class GameFragment extends Fragment {
 		
 		getActivity().setResult(Activity.RESULT_CANCELED);
 		getActivity().finish();
+	}
+	
+	// Hides all the UserImageViews currently on display - called when a bomb is detonated
+	void hideAllUserImageViews() {
+		Iterator<UserImageView> userImageViewsIterator = userImageViews.iterator();
+		while (userImageViewsIterator.hasNext()) {
+			UserImageView currentUserImageView = (UserImageView) userImageViewsIterator.next();
+			currentUserImageView.setVisibility(View.GONE);
+		}
 	}
 	
 	// Hide all the UserImageViews currently on display except the one specified
@@ -766,6 +841,31 @@ public class GameFragment extends Fragment {
 		}
 	}
 	
+	// Get the user's number of bombs they have remaining
+	int getBombsRemaining() {
+		return bombsRemaining;
+	}
+
+	// Set the number of bombs that the user has remaining for use in this game,
+	// update the display appropriately and hide the bomb button if they have none left
+	void setBombsRemaining(int bombsRemaining) {
+		this.bombsRemaining = bombsRemaining;
+		
+		if (getActivity() != null) {
+			// Update the bombsContainer
+			bombsContainer.removeAllViews();
+			for (int i=0; i<bombsRemaining; i++) {
+				ImageView bombImageView = new ImageView(getActivity());
+				bombImageView.setImageResource(R.drawable.bomb_in_game);
+				bombsContainer.addView(bombImageView);
+			}
+			
+			if (bombsRemaining <= 0) {
+				// User has no bombs left, so hide the bomb button
+				getGameFrame().removeView(bombButton);
+			}
+		}
+	}
 	
 	/* Standard Getters & Setters */
 	

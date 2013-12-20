@@ -61,6 +61,7 @@ import com.facebook.Session;
 import com.facebook.SessionDefaultAudience;
 import com.facebook.model.GraphObject;
 import com.facebook.model.GraphUser;
+import com.facebook.widget.FacebookDialog;
 import com.facebook.widget.ProfilePictureView;
 import com.facebook.widget.WebDialog;
 
@@ -83,7 +84,7 @@ public class HomeFragment extends Fragment {
     private FrameLayout progressContainer;
 	
 	// TextView for the You Scored message
-    private TextView youScoredTextView;
+    private TextView youScoredTextView;    
 	
 	// Buttons ...
     private ImageView playButton;
@@ -144,7 +145,7 @@ public class HomeFragment extends Fragment {
 			v = inflater.inflate(R.layout.fragment_home, parent, false);			
 		} else {
 			v = inflater.inflate(R.layout.fragment_home_fb_logged_in, parent, false);
-						
+									
 			scoresButton = (ImageView)v.findViewById(R.id.scoresButton);
 			scoresButton.setOnTouchListener(new View.OnTouchListener() {
 	            @Override
@@ -265,7 +266,7 @@ public class HomeFragment extends Fragment {
 	
 	@Override
 	public void onResume() {
-		super.onResume();
+		super.onResume();		
 		
 		if (!gameLaunchedFromDeepLinking && gameOverMessageDisplaying) {
 			// The game hasn't just been launched from deep linking and the game over message should still be displaying, so ...
@@ -318,8 +319,11 @@ public class HomeFragment extends Fragment {
 	}
 
 	private void startGame() {
-	    Intent i = new Intent(getActivity(), GameActivity.class);
-	    startActivityForResult(i, 0);
+        Intent i = new Intent(getActivity(), GameActivity.class);
+        Bundle bundle = new Bundle();
+		bundle.putInt("num_bombs", ((FriendSmashApplication) getActivity().getApplication()).getBombs());
+		i.putExtras(bundle);
+        startActivityForResult(i, 0);
 	}
 	
 	// Called when the Challenge button is touched
@@ -349,13 +353,34 @@ public class HomeFragment extends Fragment {
 			// to attempt a post if the write permissions have been granted
 			Log.i(FriendSmashApplication.TAG, "Reauthorized with publish permissions.");
 			Session.getActiveSession().onActivityResult(getActivity(), requestCode, resultCode, data);
-        } else if (resultCode == Activity.RESULT_OK && data != null) {
-        	// Finished a game
-			Bundle bundle = data.getExtras();
-			application.setScore(bundle.getInt("score"));
-			updateYouScoredTextView();
-			updateButtonVisibility();
-			completeGameOver(1500);
+		 } else if (resultCode == Activity.RESULT_OK && data != null) {
+	        	// Finished a game
+	        	
+	        	// Get the parameters passed through including the score
+				Bundle bundle = data.getExtras();
+				application.setScore(bundle.getInt("score"));
+				
+				// Save coins and bombs data to parse
+				int coinsCollected = (bundle.getInt("coins_collected"));
+				application.setCoinsCollected(coinsCollected);
+				if (coinsCollected > 0) {
+					application.setCoins(application.getCoins()+coinsCollected);
+				}
+				int bombsUsed = (bundle.getInt("bombs_used"));
+				if (bombsUsed > 0) {
+					application.setBombs(application.getBombs()-bombsUsed);
+				}
+				
+				// Save inventory values
+				application.saveInventory();
+		        
+		        // Reload inventory values
+		        loadInventory();
+				
+				// Update the UI
+				updateYouScoredTextView();
+				updateButtonVisibility();
+				completeGameOver(1500);
 		} else if (resultCode == Activity.RESULT_FIRST_USER && data != null) {
 			// Came from the ScoreboardFragment, so start a game with the specific user who has been clicked
 			Intent i = new Intent(getActivity(), GameActivity.class);
@@ -380,6 +405,7 @@ public class HomeFragment extends Fragment {
 		Intent i = new Intent(getActivity(), GameActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putString("user_id", userId);
+		bundle.putInt("num_bombs", ((FriendSmashApplication) getActivity().getApplication()).getBombs());
 		i.putExtras(bundle);
 		startActivityForResult(i, 0);
 	}
@@ -388,7 +414,10 @@ public class HomeFragment extends Fragment {
 	void updateYouScoredTextView() {
 		if (youScoredTextView != null) {
 			if (application.getScore() >= 0) {
-				youScoredTextView.setText("You Scored " + application.getScore() + "!");
+				youScoredTextView.setText("You smashed " + application.getLastFriendSmashedName() +
+						" " + application.getScore() + (application.getScore() == 1 ? " time!" : " times!") +
+						"\n" + "Collected " + application.getCoinsCollected() +
+						(application.getCoinsCollected() == 1 ? " coin!" : " coins!"));
 			}
 			else {
 				youScoredTextView.setText(getResources().getString(R.string.no_score));
@@ -542,11 +571,11 @@ public class HomeFragment extends Fragment {
 	
 	// Pop up a feed dialog for the user to brag to their friends about their score and to offer
 	// them the opportunity to smash them back in Friend Smash
-	private void sendBrag() {
+	private void sendBrag() {		
 	}
 	
 	// Show a dialog (feed or request) without a notification bar (i.e. full screen)
-	private void showDialogWithoutNotificationBar(String action, Bundle params) {
+	private void showDialogWithoutNotificationBar(String action, Bundle params) {		
 	}
 	
 	// Called when the session state has changed
