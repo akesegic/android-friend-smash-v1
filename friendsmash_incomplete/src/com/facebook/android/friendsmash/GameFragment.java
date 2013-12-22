@@ -831,6 +831,8 @@ public class GameFragment extends Fragment {
 				// User has no lives left, so end the game, passing back the score
 				Bundle bundle = new Bundle();
 				bundle.putInt("score", getScore());
+				bundle.putInt("coins_collected", coinsCollected);
+				bundle.putInt("bombs_used", bombsUsed);
 				
 				Intent i = new Intent();
 				i.putExtras(bundle);
