@@ -73,36 +73,6 @@
 				    	android:paddingTop="4dip"
 				    	>
 		       	    
-	     	    		<ImageView
-					        android:id="@+id/coinImage"
-					        android:layout_width="wrap_content"
-					        android:layout_height="wrap_content"
-					        android:src="@drawable/coin" />
-	     	    		
-	     	    		<TextView
-					        android:id="@+id/numCoins"
-					        android:layout_width="wrap_content"
-					        android:layout_height="wrap_content"
-					        style="@style/PlayerNameFont"
-					        android:paddingLeft="8dip"
-					        android:paddingTop="4dip"
-					        android:text="74" />
-	     	    		
-	     	    		<ImageView
-					        android:id="@+id/bombButton"
-					        android:layout_width="wrap_content"
-					        android:layout_height="wrap_content"
-					        android:paddingLeft="10dip"
-					        android:src="@drawable/bomb" />
-	     	    		
-	     	    		<TextView
-					        android:id="@+id/numBombs"
-					        android:layout_width="wrap_content"
-					        android:layout_height="wrap_content"
-					        style="@style/PlayerNameFont"
-					        android:paddingLeft="8dip"
-					        android:paddingTop="4dip"
-					        android:text="11" />
      	    		
     	    		</LinearLayout>
 		       	    		       	    
@@ -120,9 +90,8 @@
 			<RelativeLayout
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:layout_gravity="left" 
 		       	android:paddingTop="210dp"
-		       	android:layout_marginLeft="60dp">
+		       	android:layout_marginLeft="150dp">
 			    
 	  			<com.facebook.widget.LoginButton
 		            android:id="@+id/loginButton"
