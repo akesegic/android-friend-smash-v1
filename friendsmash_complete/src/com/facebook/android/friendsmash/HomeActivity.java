@@ -248,6 +248,13 @@ public class HomeActivity extends FragmentActivity {
 	public void buyBombs() {
 		// Update bomb and coins count (5 coins per bomb).
 		FriendSmashApplication app = (FriendSmashApplication) getApplication();
+		
+		// check to see that we have enough coins.
+		if (app.getCoins() - 5 < 0) {
+			Toast.makeText(this, "Not enough coins.", Toast.LENGTH_LONG).show();
+			return;
+		}
+		
 		app.setBombs(app.getBombs()+1);
 		app.setCoins(app.getCoins()-5);
 

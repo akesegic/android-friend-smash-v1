@@ -85,7 +85,7 @@ public class HomeActivity extends FragmentActivity {
         for(int i = 0; i < fragments.length; i++) {
             transaction.hide(fragments[i]);
         }
-        transaction.commit();
+        transaction.commit();        
 		
 		// Restore the logged-in user's information if it has been saved and the existing data in the application
 		// has been destroyed (i.e. the app hasn't been used for a while and memory on the device is low)
@@ -192,6 +192,13 @@ public class HomeActivity extends FragmentActivity {
 	public void buyBombs() {
 		// update bomb and coins count (5 coins per bomb)
 		FriendSmashApplication app = (FriendSmashApplication) getApplication();
+
+		// check to see that we have enough coins.
+		if (app.getCoins() - 5 < 0) {
+			Toast.makeText(this, "Not enough coins.", Toast.LENGTH_LONG).show();
+			return;
+		}
+
 		app.setBombs(app.getBombs()+1);
 		app.setCoins(app.getCoins()-5);
 
