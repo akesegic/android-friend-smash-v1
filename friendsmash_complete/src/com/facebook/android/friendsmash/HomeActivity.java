@@ -367,7 +367,7 @@ public class HomeActivity extends FragmentActivity {
 						((FriendSmashApplication)getApplication()).setCurrentFBUser(user);
 						
 						// Now log the user into Parse.
-                        saveUserToParse(user, session);
+                        logIntoParse(user, session);
 					}
 				}
 			});
@@ -393,7 +393,7 @@ public class HomeActivity extends FragmentActivity {
 		}
 	}
 	
-	private void saveUserToParse(GraphUser fbUser, Session session) {
+	private void logIntoParse(GraphUser fbUser, Session session) {
 		ParseFacebookUtils.logIn(fbUser.getId(), session.getAccessToken(), 
 				session.getExpirationDate(), new LogInCallback() {
 			@Override
