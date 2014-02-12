@@ -366,8 +366,8 @@ public class HomeActivity extends FragmentActivity {
 						// Set the currentFBUser attribute
 						((FriendSmashApplication)getApplication()).setCurrentFBUser(user);
 						
-						// Now log the user into Parse.
-                        logIntoParse(user, session);
+						// Now save the user into Parse.
+                        saveUserToParse(user, session);
 					}
 				}
 			});
@@ -393,13 +393,13 @@ public class HomeActivity extends FragmentActivity {
 		}
 	}
 	
-	private void logIntoParse(GraphUser fbUser, Session session) {
+	private void saveUserToParse(GraphUser fbUser, Session session) {
 		ParseFacebookUtils.logIn(fbUser.getId(), session.getAccessToken(), 
 				session.getExpirationDate(), new LogInCallback() {
 			@Override
 			public void done(ParseUser parseUser, ParseException err) {                   
 				if (parseUser != null) {
-					// The user is logged into Parse.
+					// The user has been saved to Parse.
 					if (parseUser.isNew()) {
 						// This user was created during this session with Facebook Login.                       
 						Log.d(TAG, "ParseUser created.");
@@ -408,9 +408,9 @@ public class HomeActivity extends FragmentActivity {
 						FriendSmashApplication app = ((FriendSmashApplication)getApplication());
 						app.saveInventory();
 					} else {
-						Log.d(TAG, "User has logged in before. Pull their values: " + parseUser);
+						Log.d(TAG, "User exists in Parse. Pull their values: " + parseUser);
 
-						// This user has logged in before. Call loadInventory() which has logic
+						// This user existed before. Call loadInventory() which has logic
 						// to check Parse if connected.
 						FriendSmashApplication app = ((FriendSmashApplication)getApplication());
 						app.loadInventory();
@@ -418,8 +418,8 @@ public class HomeActivity extends FragmentActivity {
 
 					loadInventoryFragment();
 				} else {
-					// The user wasn't logged in. Check the exception.
-					Log.d(TAG, "User was not logged into Parse: " + err.getMessage());
+					// The user wasn't saved. Check the exception.
+					Log.d(TAG, "User was not saved to Parse: " + err.getMessage());
 				}
 			}
 		});
